@@ -25,6 +25,14 @@ os --architecture - print CPU architecture for which Node.js binary has compiled
 hash path_to_file - calculate hash for file and print it
 compress path_to_file path_to_destination - compress file
 decompress path_to_file path_to_destination - decompress file`);
+const options = {
+    path: myOs.home(),
+};
+Object.defineProperty(options, 'mainPath', {
+    value: myOs.home(),
+    writable: false,
+    enumerable: false,
+});
 
 process.stdin.on('data', data => {
     const correctData = data.toString().trim();
@@ -32,8 +40,11 @@ process.stdin.on('data', data => {
         console.log(`Thank you for using File Manager, ${userName}, goodbye!`);
         process.exit();
     } else {
-        const values = correctData.split(' ');
-        if (values[0] == 'ls') navigation.ls(values[1]);
+        const command = correctData.split(" ")[0];
+        const arg = correctData.split(" ").slice(1).join(' ');
+        if (command == 'ls') navigation.ls(arg ? arg : options.path, options);
+        if (command == 'up') navigation.up(options);
+        if (command == 'cd') navigation.cd(options, arg)
     }
 });
 process.on('SIGINT', () => {
