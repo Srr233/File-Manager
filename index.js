@@ -2,6 +2,7 @@ import argsReader from './src/services/argsReader.js';
 import process from 'process';
 import { myOs } from './src/os_info/index.js';
 import { navigation } from './src/navigation/index.js';
+import { basicOperation } from './src/operations/index.js';
 
 const userName = argsReader(process.argv);
 console.log(`Welcome to the File Manager, ${userName}!`);
@@ -44,7 +45,8 @@ process.stdin.on('data', data => {
         const arg = correctData.split(" ").slice(1).join(' ');
         if (command == 'ls') navigation.ls(arg ? arg : options.path, options);
         if (command == 'up') navigation.up(options);
-        if (command == 'cd') navigation.cd(options, arg)
+        if (command == 'cd') navigation.cd(options, arg);
+        if (command == 'cat') basicOperation.cat(arg);
     }
 });
 process.on('SIGINT', () => {
