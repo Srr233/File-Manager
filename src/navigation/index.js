@@ -7,8 +7,7 @@ class Navigation {
     async ls(path) {
         try {
             const files = (await fs.readdir(path))
-            .filter(v => v.length < 16)
-            .sort(v => (v.match(/[.]/) ? 1 : -1) ? (v.split('.')[0] ?  -1 : 1) : 1);
+            .sort(v => v.match(/[.]/) ? 1 : -1 ? v.split('.')[0] ?  -1 : 1 : 1);
             const dataForTable = files.map((value, i) => (
                 {
                     index: i,

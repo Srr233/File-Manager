@@ -1,3 +1,5 @@
+import { start } from "repl";
+
 function createTable (arrayOfData) {
     let result = '|¯¯¯(index)¯¯¯|¯¯¯¯¯¯Name¯¯¯¯¯¯|¯¯¯¯¯¯¯Type¯¯¯¯¯¯|\n';
 
@@ -22,9 +24,15 @@ function tableMaker(amountOfSymbols, value) {
     const startAmountSpace = Math.ceil(amountOfSpace / 2);
     const endAmountSpace = amountOfSpace - startAmountSpace;
 
-    result += ' '.repeat(startAmountSpace);
-    result += value;
-    result += ' '.repeat(endAmountSpace);
+    if (amountOfSpace < 0) {
+        result += tableMaker(amountOfSymbols, value.slice(0, amountOfSpace)) + '|                 |\n';
+        const last = value.slice(amountOfSpace);
+        result += '|             |' + tableMaker(amountOfSymbols, last);
+    } else {
+        result += ' '.repeat(startAmountSpace);
+        result += value;
+        result += ' '.repeat(endAmountSpace);
+    }
     return result;
 }
 
