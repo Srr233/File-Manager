@@ -47,6 +47,7 @@ process.stdin.on('data', data => {
         if (command == 'up') navigation.up(options);
         if (command == 'cd') navigation.cd(options, arg);
         if (command == 'cat') basicOperation.cat(arg);
+        if (command == 'add') basicOperation.add(options.path, arg);
     }
 });
 process.on('SIGINT', () => {
