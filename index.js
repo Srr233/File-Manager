@@ -52,6 +52,12 @@ process.stdin.on('data', data => {
         if (command == 'cp') basicOperation.cp(options.path, arg);
         if (command == 'mv') basicOperation.mv(options.path, arg);
         if (command == 'rm') basicOperation.rm(options.path, arg);
+        if (command == 'os') {
+            if (arg == '--username') myOs.username();
+            if (arg == '--cpus') myOs.cpus();
+            if (arg == '--architecture') myOs.architecture();
+            if (arg == '--homedir') console.log(myOs.home());
+        }
     }
 });
 process.on('SIGINT', () => {
