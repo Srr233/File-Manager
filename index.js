@@ -50,6 +50,8 @@ process.stdin.on('data', data => {
         if (command == 'add') basicOperation.add(options.path, arg);
         if (command == 'rn') basicOperation.rn(options.path, arg);
         if (command == 'cp') basicOperation.cp(options.path, arg);
+        if (command == 'mv') basicOperation.mv(options.path, arg);
+        if (command == 'rm') basicOperation.rm(options.path, arg);
     }
 });
 process.on('SIGINT', () => {

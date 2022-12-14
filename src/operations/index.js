@@ -35,22 +35,77 @@ class BasicOperation {
         try {
             const [firstArg, secondArg] = giveGoodArgs(arg);
             if (firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(firstArg).pipe(fs.createWriteStream(secondArg));
+                fs.createReadStream(firstArg)
+                .pipe(fs.createWriteStream(secondArg));
             } else if (firstArg.match(/[a-zA-Z]:\\/) && !secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(firstArg).pipe(fs.createWriteStream(`${pathM.dirname(firstArg)}\\${secondArg}`));
+                fs.createReadStream(firstArg)
+                .pipe(fs.createWriteStream(`${pathM.dirname(firstArg)}\\${secondArg}`));
             } else if (!firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(`${path}\\${firstArg}`).pipe(fs.createWriteStream(secondArg));
+                fs.createReadStream(`${path}\\${firstArg}`)
+                .pipe(fs.createWriteStream(secondArg));
             } else {
                 fs.createReadStream(`${path}\\${firstArg}`)
-                .pipe(fs.createWriteStream(`${path}\\${secondArg}`));
+                .pipe(fs.createWriteStream(`${path}\\${secondArg}`)
+                );
             }
         } catch(e) {
             console.log('Something went wrong, and I think I know who did it. So, please give me correct arguments...');
         }
+    }
+    mv(path, arg) {
+        try {
+            const [firstArg, secondArg1] = giveGoodArgs(arg);
+            const secondArg = secondArg1.split('.')[0];
+            if (firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+                moveFile(firstArg, secondArg);
+            } else if (!firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+                moveFile(`${path}\\${firstArg}`, secondArg);
+            } else {
+                console.log('What? What are you doing with the paths?');
+            }
+        } catch(e) {
+            console.log('Something went wrong, and I think I know who did it. So, please give me correct arguments, or read this: ', e.message);
+        }
+    }
 
+    rm(path, pathTofile) {
+        if (pathTofile.match(/[a-zA-Z]:\\/)) {
+            fs.access(pathTofile, err => {
+                if (err) {
+                    console.log('Something went wrong. The error: ', err.message);
+                    return;
+                }
+                fs.rm(pathTofile);
+            });
+            checkAndMake(pathTofile, () => {
+                fs.rm(pathTofile, err => err ? console.log(err.message) : '');
+            })
+            return;
+        }
+        checkAndMake(`${path}${pathTofile}`, () => fs.rm(`${path}${pathTofile}`, err => err ? console.log(err.message) : ''));
     }
 }
 
+function moveFile(fromPath, toPathDirectory) {
+    const pathForCopyFile = `${toPathDirectory}${fromPath.split('\\').pop()}`;
+    checkAndMake(fromPath, () => {
+        fs.createReadStream(fromPath)
+        .pipe(fs.createWriteStream(pathForCopyFile)
+        .on('finish', () => {
+            fs.rm(fromPath, () => {});
+        }));
+    });
+}
+
+function checkAndMake(file, callback) {
+    fs.access(file, err => {
+        if (err) {
+            console.log('Something went wrong. The error: ', err.message);
+            return;
+        }
+        callback();
+    })
+}
 function giveGoodArgs(arg) {
     const args = arg.split('.');
     const [first, second, third] = args;
