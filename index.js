@@ -59,6 +59,7 @@ process.stdin.on('data', data => {
             if (arg == '--cpus') myOs.cpus();
             if (arg == '--architecture') myOs.architecture();
             if (arg == '--homedir') console.log(myOs.home());
+            if (arg == '--EOL') myOs.EOL();
         }
         if (command == 'hash') hash(options.path, arg);
         if (command == 'compress') transformFile.compress(options.path, arg);

@@ -35,18 +35,17 @@ class BasicOperation {
         try {
             const [firstArg, secondArg] = giveGoodArgs(arg);
             if (firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(firstArg)
-                .pipe(fs.createWriteStream(secondArg));
-            } else if (firstArg.match(/[a-zA-Z]:\\/) && !secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(firstArg)
-                .pipe(fs.createWriteStream(`${pathM.dirname(firstArg)}\\${secondArg}`));
+                checkAndMake(firstArg, () => {
+                    fs.createReadStream(firstArg)
+                    .pipe(fs.createWriteStream(secondArg.split('.').slice(0, -1).join('') + firstArg.split('\\').pop()));
+                })
             } else if (!firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
-                fs.createReadStream(`${path}\\${firstArg}`)
-                .pipe(fs.createWriteStream(secondArg));
+                checkAndMake(`${path}\\${firstArg}`, () => {
+                    fs.createReadStream(`${path}\\${firstArg}`)
+                    .pipe(fs.createWriteStream(secondArg.split('.').slice(0, -1).join('') + firstArg));
+                })
             } else {
-                fs.createReadStream(`${path}\\${firstArg}`)
-                .pipe(fs.createWriteStream(`${path}\\${secondArg}`)
-                );
+                console.log('Please, second argumend must have \'D:\path\\\'');
             }
         } catch(e) {
             console.log('Something went wrong, and I think I know who did it. So, please give me correct arguments...');
@@ -70,13 +69,6 @@ class BasicOperation {
 
     rm(path, pathTofile) {
         if (pathTofile.match(/[a-zA-Z]:\\/)) {
-            fs.access(pathTofile, err => {
-                if (err) {
-                    console.log('Something went wrong. The error: ', err.message);
-                    return;
-                }
-                fs.rm(pathTofile);
-            });
             checkAndMake(pathTofile, () => {
                 fs.rm(pathTofile, err => err ? console.log(err.message) : '');
             })
