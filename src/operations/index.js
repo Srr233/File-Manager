@@ -1,6 +1,6 @@
-import fs, { write } from 'fs';
+import fs from 'fs';
 import pathM from 'path';
-
+import { checkAndMake } from '../services/checkAndMake.js';
 class BasicOperation {
     cat(path) {
         const readableStream = fs.createReadStream(path);
@@ -97,15 +97,7 @@ function moveFile(fromPath, toPathDirectory) {
     });
 }
 
-function checkAndMake(file, callback) {
-    fs.access(file, err => {
-        if (err) {
-            console.log('Something went wrong. The error: ', err.message);
-            return;
-        }
-        callback();
-    })
-}
+
 function giveGoodArgs(arg) {
     const args = arg.split('.');
     const [first, second, third] = args;

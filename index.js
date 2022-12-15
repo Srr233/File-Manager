@@ -3,6 +3,8 @@ import process from 'process';
 import { myOs } from './src/os_info/index.js';
 import { navigation } from './src/navigation/index.js';
 import { basicOperation } from './src/operations/index.js';
+import { hash } from './src/operations/hash/index.js';
+import { transformFile } from './src/transform_file/index.js';
 
 const userName = argsReader(process.argv);
 console.log(`Welcome to the File Manager, ${userName}!`);
@@ -58,6 +60,9 @@ process.stdin.on('data', data => {
             if (arg == '--architecture') myOs.architecture();
             if (arg == '--homedir') console.log(myOs.home());
         }
+        if (command == 'hash') hash(options.path, arg);
+        if (command == 'compress') transformFile.compress(options.path, arg);
+        if (command == 'decompress') transformFile.decompress(options.path, arg);
     }
 });
 process.on('SIGINT', () => {
