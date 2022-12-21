@@ -27,14 +27,18 @@ class Navigation {
         if (options.mainPath == options.path) return;
         options.path = path.dirname(options.path);
     }
-    cd(options, pathN) {
-        if (path.isAbsolute(pathN)) {
-            options.path = pathN;
-        } else {
-            options.path = path.join(options.path, pathN, path.sep);
+    async cd(options, pathN) {
+        try {
+            await fs.access(path.isAbsolute(pathN) ? pathN : path.join(options.path, pathN, path.sep));
+            if (path.isAbsolute(pathN)) {
+                options.path = pathN;
+            } else {
+                options.path = path.join(options.path, pathN, path.sep);
+            }
+            console.log(`Current working directory is: "${options.path}"`);
+        } catch(e) {
+            console.log(e.message)
         }
-
-        console.log(`Current working directory is: "${options.path}"`);
     }
 }
 
