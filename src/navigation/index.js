@@ -29,6 +29,7 @@ class Navigation {
     }
     cd(options, pathN) {
         if (isGoodPath(pathN)) {
+            console.log(`Curent path is: ${pathN}`)
             options.path = pathN;
         }
     }
