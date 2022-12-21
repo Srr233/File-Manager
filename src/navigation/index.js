@@ -28,10 +28,13 @@ class Navigation {
         options.path = path.dirname(options.path);
     }
     cd(options, pathN) {
-        if (isGoodPath(pathN)) {
-            console.log(`Curent path is: ${pathN}`)
+        if (path.isAbsolute(pathN)) {
             options.path = pathN;
+        } else {
+            options.path = path.join(options.path, pathN, path.sep);
         }
+
+        console.log(`Current working directory is: "${options.path}"`);
     }
 }
 
