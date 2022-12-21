@@ -1,6 +1,7 @@
 import fs from 'fs';
 import Zlib from 'zlib';
 import { checkAndMake } from '../services/checkAndMake.js';
+import { isGoodPath } from '../services/isGoodPath.js';
 
 class TransformFile {
     compress(path, arg) {
@@ -27,11 +28,11 @@ class TransformFile {
         const [firstArg, secondArg] = giveGoodArgs(arg);
         const pathToFile = firstArg + '.br';
         const pathToCreateFile = secondArg.split(' ').slice(1).join(' ');
-        if (pathToFile.match(/[a-zA-Z]:\\/) && pathToCreateFile.match(/[a-zA-Z]:\\/)) {
-            checkAndMake(pathToFile.match(/[a-zA-Z]:\\/) ? pathToFile : path + pathToFile, () => {
+        if (isGoodPath(pathToFile) && isGoodPath(pathToCreateFile)) {
+            checkAndMake(isGoodPath(pathToFile) ? pathToFile : path + pathToFile, () => {
                 const correctPathToCreateNewFile = pathToCreateFile + pathToFile.split('\\').pop().split('.').slice(0, -1).join('.');
                 const unZlib = Zlib.createBrotliDecompress();
-                const [readStream, writeStream] = [fs.createReadStream(pathToFile.match(/[a-zA-Z]:\\/) ? pathToFile : path + pathToFile), fs.createWriteStream(correctPathToCreateNewFile)];
+                const [readStream, writeStream] = [fs.createReadStream(isGoodPath(pathToFile) ? pathToFile : path + pathToFile), fs.createWriteStream(correctPathToCreateNewFile)];
                 readStream.pipe(unZlib).pipe(writeStream);
             })
             return;

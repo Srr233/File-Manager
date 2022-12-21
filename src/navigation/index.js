@@ -1,6 +1,7 @@
 import { createTable } from "../services/createTable.js";
 import { promises } from 'fs';
 import path from "path";
+import { isGoodPath } from "../services/isGoodPath.js";
 
 const fs = promises;
 
@@ -26,9 +27,9 @@ class Navigation {
         if (options.mainPath == options.path) return;
         options.path = path.dirname(options.path);
     }
-    cd(options, path) {
-        if (path.match(/[a-zA-Z]:\\/)) {
-            options.path = path;
+    cd(options, pathN) {
+        if (isGoodPath(pathN)) {
+            options.path = pathN;
         }
     }
 }

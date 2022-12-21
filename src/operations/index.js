@@ -1,6 +1,7 @@
 import fs from 'fs';
 import pathM from 'path';
 import { checkAndMake } from '../services/checkAndMake.js';
+import { isGoodPath } from '../services/isGoodPath.js';
 class BasicOperation {
     cat(path) {
         const readableStream = fs.createReadStream(path);
@@ -14,11 +15,11 @@ class BasicOperation {
         try {
             const [fileName, newFilename] = giveGoodArgs(arg);
     
-            if (fileName.match(/[a-zA-Z]:\\/) && !newFilename.match(/[a-zA-Z]:\\/)) {
+            if (isGoodPath(fileName) && !isGoodPath(newFilename)) {
                 fs.rename(fileName, pathM.normalize(`${pathM.dirname(fileName)}\\${newFilename}`), err => {
                     if (err) console.log('Something went wrong!', err.message);
                 });
-            } else if (fileName.match(/[a-zA-Z]:\\/) && newFilename.match(/[a-zA-Z]:\\/)) {
+            } else if (isGoodPath(fileName) && isGoodPath(newFilename)) {
                 fs.rename(fileName, newFilename, err => {
                     if (err) console.log('Something went wrong!', err.message);
                 });
@@ -34,12 +35,12 @@ class BasicOperation {
     cp(path, arg) {
         try {
             const [firstArg, secondArg] = giveGoodArgs(arg);
-            if (firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+            if (isGoodPath(firstArg) && isGoodPath(secondArg)) {
                 checkAndMake(firstArg, () => {
                     fs.createReadStream(firstArg)
                     .pipe(fs.createWriteStream(secondArg.split('.').slice(0, -1).join('') + firstArg.split('\\').pop()));
                 })
-            } else if (!firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+            } else if (!isGoodPath(firstArg) && isGoodPath(secondArg)) {
                 checkAndMake(`${path}\\${firstArg}`, () => {
                     fs.createReadStream(`${path}\\${firstArg}`)
                     .pipe(fs.createWriteStream(secondArg.split('.').slice(0, -1).join('') + firstArg));
@@ -55,9 +56,9 @@ class BasicOperation {
         try {
             const [firstArg, secondArg1] = giveGoodArgs(arg);
             const secondArg = secondArg1.split('.')[0];
-            if (firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+            if (isGoodPath(firstArg) && isGoodPath(secondArg)) {
                 moveFile(firstArg, secondArg);
-            } else if (!firstArg.match(/[a-zA-Z]:\\/) && secondArg.match(/[a-zA-Z]:\\/)) {
+            } else if (!isGoodPath(firstArg) && isGoodPath(secondArg)) {
                 moveFile(`${path}\\${firstArg}`, secondArg);
             } else {
                 console.log('What? What are you doing with the paths?');
@@ -68,7 +69,7 @@ class BasicOperation {
     }
 
     rm(path, pathTofile) {
-        if (pathTofile.match(/[a-zA-Z]:\\/)) {
+        if (isGoodPath(pathTofile)) {
             checkAndMake(pathTofile, () => {
                 fs.rm(pathTofile, err => err ? console.log(err.message) : '');
             })
