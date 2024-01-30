@@ -8,10 +8,10 @@ class Commander {
     this.main = main;
     this.nwd = new Nwd(main);
   }
-  doCommand(command) {
+  async doCommand(command) {
     try {
       const data = getCommandArg(command.toString("utf8").trim());
-      this[data.command](data.args);
+      await this[data.command](data.args);
     } catch (err) {
       useRightErrorSpeak(err);
     }
@@ -23,15 +23,9 @@ class Commander {
     this.nwd.up();
     InfoSpeaker.currentDir(this.main.workDir);
   }
-  cd(args) {
-    this.nwd
-      .cd(args.join(" "))
-      .then(() => {
-        InfoSpeaker.currentDir(this.main.workDir);
-      })
-      .catch((err) => {
-        useRightErrorSpeak(err);
-      });
+  async cd(args) {
+    await this.nwd.cd(args.join(" "));
+    InfoSpeaker.currentDir(this.main.workDir);
   }
 }
 
