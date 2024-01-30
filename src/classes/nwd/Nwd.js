@@ -1,4 +1,6 @@
 import path from "path";
+import fs from "fs/promises";
+import InputError from "../InputError.js";
 
 class Nwd {
   constructor(data) {
@@ -11,7 +13,15 @@ class Nwd {
     }
   }
 
-  cd(path) {}
+  async cd(pathTo) {
+    try {
+      const normalized = path.normalize(pathTo);
+      await fs.access(normalized);
+      this.data.workDir = normalized;
+    } catch (err) {
+      if (err.message.includes("ENOENT")) throw new InputError();
+    }
+  }
 
   ls() {}
 }
