@@ -6,9 +6,10 @@ class Main {
   constructor(args) {
     this.data = {
       args: args,
-      homedir: homedir(),
+      homeDir: homedir(),
+      workDir: homedir(),
     };
-    const commander = new Commander(this);
+    const commander = new Commander(this.data);
 
     process.on("exit", (code) => {
       if (code === 0) InfoSpeaker.adios(this.data.args.username);
@@ -21,7 +22,7 @@ class Main {
     });
 
     InfoSpeaker.greeting(this.data.args.username);
-    InfoSpeaker.currentDir(this.data.homedir);
+    InfoSpeaker.currentDir(this.data.homeDir);
     InfoSpeaker.waitFor();
   }
 }

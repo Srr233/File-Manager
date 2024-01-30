@@ -2,10 +2,12 @@ import getCommandArg from "../service/getCommanArg.js";
 import InfoSpeaker from "./InfoSpeaker.js";
 import InputError from "./InputError.js";
 import OperationFailed from "./OperationFailed.js";
+import Nwd from "./nwd/Nwd.js";
 
 class Commander {
   constructor(main) {
     this.main = main;
+    this.nwd = new Nwd(main);
   }
   doCommand(command) {
     try {
@@ -22,6 +24,10 @@ class Commander {
   }
   exit() {
     process.exit(0);
+  }
+  up() {
+    this.nwd.up();
+    InfoSpeaker.currentDir(this.main.workDir);
   }
 }
 
