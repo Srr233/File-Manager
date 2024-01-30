@@ -4,7 +4,7 @@ import OperationFailed from "../classes/OperationFailed.js";
 
 function useRightErrorSpeak(err) {
   if (err instanceof TypeError || err instanceof InputError) {
-    InfoSpeaker.invaldInput();
+    InfoSpeaker.invaldInput(err.message);
   }
   if (err instanceof OperationFailed) {
     InfoSpeaker.error();

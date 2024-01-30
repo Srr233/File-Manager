@@ -13,11 +13,14 @@ class InfoSpeaker {
   static waitFor() {
     process.stdout.write("Print command and wait for result.\n");
   }
-  static invaldInput() {
-    process.stdout.write("Invalid input\n");
+  static invaldInput(message) {
+    process.stdout.write(`Invalid input\n Error: ${message}\n`);
   }
   static error() {
     process.stdout.write("Operation failed\n");
+  }
+  static showInfo(info) {
+    process.stdout.write(info);
   }
 }
 

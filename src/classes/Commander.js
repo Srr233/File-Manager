@@ -27,6 +27,10 @@ class Commander {
     await this.nwd.cd(args.join(" "));
     InfoSpeaker.currentDir(this.main.workDir);
   }
+  async ls() {
+    const tableString = await this.nwd.ls();
+    InfoSpeaker.showInfo(tableString);
+  }
 }
 
 export default Commander;
