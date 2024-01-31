@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 async function createDatals(pathLike) {
-  const filesName = await fs.readdir(pathLike);
+  const filesName = await fs.readdir(path.join(pathLike.dir, pathLike.base));
   const res = [];
 
   for (let i = 0; i < filesName.length; i++) {

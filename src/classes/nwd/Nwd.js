@@ -18,26 +18,15 @@ class Nwd {
 
   async cd(pathTo) {
     try {
-      const normalized = path.normalize(pathTo);
-      const parsed = path.parse(normalized);
-      let correctPath = normalized;
-
-      if (!parsed.root) {
-        correctPath = path.join(
-          this.data.workDir.dir,
-          this.data.workDir.name,
-          parsed.dir,
-          parsed.name
-        );
-      }
-      if (parsed.ext) {
+      if (pathTo?.ext) {
         throw new InputError("The path is not a directory!");
       } else if (!pathTo) {
         throw new InputError("cd command does not have an argument!");
       }
 
-      await fs.access(correctPath);
-      this.data.workDir = path.parse(correctPath);
+      const pathDirBase = path.join(pathTo.dir, pathTo.base);
+      await fs.access(pathDirBase);
+      this.data.workDir = pathTo;
     } catch (err) {
       throw new InputError(err.message);
     }
@@ -49,7 +38,7 @@ class Nwd {
       const table = createlsTable(data);
       return table;
     } catch (err) {
-      throw new OperationFailed();
+      throw new OperationFailed(err.message);
     }
   }
 }
