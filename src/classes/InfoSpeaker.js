@@ -8,7 +8,9 @@ class InfoSpeaker {
     );
   }
   static currentDir(dirName) {
-    process.stdout.write(`You are currently in ${dirName}\n`);
+    process.stdout.write(
+      `You are currently in ${dirName.dir}\\${dirName.name}\n`
+    );
   }
   static waitFor() {
     process.stdout.write("Print command and wait for result.\n");

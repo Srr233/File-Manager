@@ -1,13 +1,15 @@
+import path from "path";
 import Commander from "./Commander.js";
 import InfoSpeaker from "./InfoSpeaker.js";
 import { homedir } from "os";
 
 class Main {
   constructor(args) {
+    const parsedHomeDir = path.parse(homedir());
     this.data = {
       args: args,
-      homeDir: homedir(),
-      workDir: homedir(),
+      homeDir: parsedHomeDir,
+      workDir: parsedHomeDir,
     };
     const commander = new Commander(this.data);
 

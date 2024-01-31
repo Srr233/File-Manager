@@ -11,21 +11,33 @@ class Nwd {
   }
 
   up() {
-    if (path.parse(this.data.workDir).base) {
-      this.data.workDir = path.dirname(this.data.workDir);
+    if (this.data.workDir.base) {
+      this.data.workDir = path.parse(this.data.workDir.dir);
     }
   }
 
   async cd(pathTo) {
     try {
       const normalized = path.normalize(pathTo);
-      if (path.parse(normalized).ext) {
+      const parsed = path.parse(normalized);
+      let correctPath = normalized;
+
+      if (!parsed.root) {
+        correctPath = path.join(
+          this.data.workDir.dir,
+          this.data.workDir.name,
+          parsed.dir,
+          parsed.name
+        );
+      }
+      if (parsed.ext) {
         throw new InputError("The path is not a directory!");
       } else if (!pathTo) {
         throw new InputError("cd command does not have an argument!");
       }
-      await fs.access(normalized);
-      this.data.workDir = normalized;
+
+      await fs.access(correctPath);
+      this.data.workDir = path.parse(correctPath);
     } catch (err) {
       throw new InputError(err.message);
     }
