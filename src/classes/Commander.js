@@ -44,6 +44,13 @@ class Commander {
   async add(args) {
     await this.operation.add(args.join(""));
   }
+
+  async rn([oldPath, newPath]) {
+    const old = getRightPath(oldPath, this.main.workDir);
+    const newP = getRightPath(newPath, this.main.workDir);
+
+    await this.operation.rn(old, newP);
+  }
 }
 
 export default Commander;

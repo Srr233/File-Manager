@@ -28,7 +28,19 @@ class Operation {
     });
   }
 
-  async rn() {}
+  async rn(pathToFile, newFilename) {
+    await new Promise((res, rej) => {
+      const oldP = path.join(pathToFile.dir, pathToFile.base);
+      const newF = path.join(newFilename.dir, newFilename.base);
+      fs.rename(oldP, newF, (err) => {
+        if (err) {
+          rej(new InputError(err.message));
+        } else {
+          res();
+        }
+      });
+    });
+  }
 
   async cp() {}
 
