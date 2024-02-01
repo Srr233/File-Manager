@@ -42,7 +42,23 @@ class Operation {
     });
   }
 
-  async cp() {}
+  async cp(pathFile, pathDir) {
+    await new Promise((res, rej) => {
+      const pathF = path.join(pathFile.dir, pathFile.base);
+      const pathD = path.join(
+        pathDir.dir,
+        pathDir.base,
+        pathFile.name + pathFile.ext
+      );
+      fs.copyFile(pathF, pathD, (err) => {
+        if (err) {
+          rej(new InputError(err.message));
+        } else {
+          res();
+        }
+      });
+    });
+  }
 
   async rm() {}
 
