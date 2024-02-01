@@ -40,6 +40,10 @@ class Commander {
     const rightPath = getRightPath(args.join(" "), this.main.workDir);
     await this.operation.cat(rightPath);
   }
+
+  async add(args) {
+    await this.operation.add(args.join(""));
+  }
 }
 
 export default Commander;

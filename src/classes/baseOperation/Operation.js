@@ -18,7 +18,15 @@ class Operation {
     readFS.pipe(process.stdout);
   }
 
-  async add() {}
+  async add(nameOfFile) {
+    await new Promise((res, rej) => {
+      const createFile = fs.createWriteStream(
+        path.join(this.data.workDir.dir, this.data.workDir.base, nameOfFile)
+      );
+      createFile.on("error", (err) => rej(new InputError(err.message)));
+      createFile.on("finish", () => res(writedFile));
+    });
+  }
 
   async rn() {}
 
