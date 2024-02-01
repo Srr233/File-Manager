@@ -58,6 +58,13 @@ class Commander {
 
     await this.operation.cp(pathF, pathD);
   }
+
+  async mv([pathFile, pathDir]) {
+    const pathF = getRightPath(pathFile, this.main.workDir);
+    const pathD = getRightPath(pathDir, this.main.workDir);
+
+    await this.operation.mv(pathF, pathD);
+  }
 }
 
 export default Commander;

@@ -1,6 +1,6 @@
 import fs from "fs";
 import InputError from "../InputError.js";
-import path from "path";
+import path, { resolve } from "path";
 
 class Operation {
   constructor(data) {
@@ -62,7 +62,40 @@ class Operation {
 
   async rm() {}
 
-  async mv() {}
+  async mv(pathFile, pathDir) {
+    const pathF = path.join(pathFile.dir, pathFile.base);
+    const pathD = path.join(
+      pathDir.dir,
+      pathDir.base,
+      pathFile.name + pathFile.ext
+    );
+
+    const readStr = await new Promise((res, rej) => {
+      const readable = fs.createReadStream(pathF);
+      readable.on("error", (err) => rej(new InputError(err.message)));
+      readable.on("ready", () => res(readable));
+    });
+
+    const writableStr = await new Promise((res, rej) => {
+      const writeStr = fs.createWriteStream(pathD);
+      writeStr.on("error", (err) => rej(new InputError(err.message)));
+      writeStr.on("ready", () => res(writeStr));
+    });
+
+    const pipeline = readStr.pipe(writableStr);
+
+    await new Promise((res, rej) => {
+      pipeline.on("close", () => {
+        fs.rm(pathF, (err) => {
+          if (err) {
+            rej(new InputError(err.message));
+          } else {
+            res();
+          }
+        });
+      });
+    });
+  }
 }
 
 export default Operation;
