@@ -2,8 +2,6 @@ import { createHash } from "crypto";
 import fs from "fs";
 import InputError from "../InputError.js";
 import path from "path";
-import { pipeline } from "stream/promises";
-import OperationFailed from "../OperationFailed.js";
 
 class HashCalc {
   async hash(rightPath) {
