@@ -4,6 +4,7 @@ import useRightErrorSpeak from "../service/useRightErrorSpeak.js";
 import InfoSpeaker from "./InfoSpeaker.js";
 import InputError from "./InputError.js";
 import Operation from "./baseOperation/Operation.js";
+import HashCalc from "./hashCalc/HashCalck.js";
 import Nwd from "./nwd/Nwd.js";
 import OsOperation from "./osOperation/OsOperation.js";
 
@@ -13,6 +14,7 @@ class Commander {
     this.nwd = new Nwd(main);
     this.operation = new Operation(main);
     this.osOperation = new OsOperation(main);
+    this.hashCalc = new HashCalc();
   }
   async doCommand(command) {
     try {
@@ -82,6 +84,13 @@ class Commander {
     } catch (err) {
       throw new InputError(err.message);
     }
+  }
+
+  async hash(pathToFile) {
+    const [pathF] = pathToFile;
+    const rightPath = getRightPath(pathF, this.main.workDir);
+
+    await this.hashCalc.hash(rightPath);
   }
 }
 
