@@ -60,7 +60,19 @@ class Operation {
     });
   }
 
-  async rm() {}
+  async rm(pathForDelete) {
+    const pathDel = path.join(pathForDelete.dir, pathForDelete.base);
+
+    await new Promise((res, rej) => {
+      fs.rm(pathDel, (err) => {
+        if (err) {
+          rej(new InputError(err.message));
+        } else {
+          res();
+        }
+      });
+    });
+  }
 
   async mv(pathFile, pathDir) {
     const pathF = path.join(pathFile.dir, pathFile.base);

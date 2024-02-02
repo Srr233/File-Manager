@@ -65,6 +65,12 @@ class Commander {
 
     await this.operation.mv(pathF, pathD);
   }
+
+  async rm(args) {
+    const pathForDelete = getRightPath(args.join(""), this.main.workDir);
+
+    await this.operation.rm(pathForDelete);
+  }
 }
 
 export default Commander;
