@@ -4,6 +4,8 @@ import useRightErrorSpeak from "../service/useRightErrorSpeak.js";
 import InfoSpeaker from "./InfoSpeaker.js";
 import InputError from "./InputError.js";
 import Operation from "./baseOperation/Operation.js";
+import Compress from "./compDecompress/Compress.js";
+import Decompress from "./compDecompress/Decompress.js";
 import HashCalc from "./hashCalc/HashCalck.js";
 import Nwd from "./nwd/Nwd.js";
 import OsOperation from "./osOperation/OsOperation.js";
@@ -15,7 +17,10 @@ class Commander {
     this.operation = new Operation(main);
     this.osOperation = new OsOperation(main);
     this.hashCalc = new HashCalc();
+    this.compressFile = new Compress(main);
+    this.decompressFile = new Decompress(main);
   }
+
   async doCommand(command) {
     try {
       const data = getCommandArg(command.toString("utf8").trim());
@@ -86,11 +91,24 @@ class Commander {
     }
   }
 
-  async hash(pathToFile) {
-    const [pathF] = pathToFile;
-    const rightPath = getRightPath(pathF, this.main.workDir);
+  async hash([pathToFile]) {
+    const rightPath = getRightPath(pathToFile, this.main.workDir);
 
     await this.hashCalc.hash(rightPath);
+  }
+
+  async compress([pathToFile, pathDestination]) {
+    const pathF = getRightPath(pathToFile, this.main.workDir);
+    const pathD = getRightPath(pathDestination, this.main.workDir);
+
+    await this.compressFile.compress(pathF, pathD);
+  }
+
+  async decompress([pathToFile, pathDestination]) {
+    const pathF = getRightPath(pathToFile, this.main.workDir);
+    const pathD = getRightPath(pathDestination, this.main.workDir);
+
+    await this.decompressFile.decompress(pathF, pathD);
   }
 }
 
