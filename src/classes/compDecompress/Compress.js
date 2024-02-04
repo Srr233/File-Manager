@@ -21,7 +21,11 @@ class Compress {
 
     const writable = await new Promise((res, rej) => {
       const writable = fs.createWriteStream(
-        path.join(pathDestination.dir, pathDestination.base, pathToFile.name)
+        path.join(
+          pathDestination.dir,
+          pathDestination.base,
+          pathToFile.base + ".br"
+        )
       );
       writable.on("error", (err) => rej(new InputError(err.message)));
       writable.on("ready", () => res(writable));
